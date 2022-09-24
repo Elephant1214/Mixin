@@ -128,14 +128,6 @@ module org.spongepowered.mixin {
     uses org.spongepowered.asm.service.IGlobalPropertyService;
     provides org.spongepowered.asm.service.IGlobalPropertyService
         with org.spongepowered.asm.service.modlauncher.Blackboard;
-
-    uses cpw.mods.modlauncher.api.ITransformationService;
-    provides cpw.mods.modlauncher.api.ITransformationService
-        with org.spongepowered.asm.launch.MixinTransformationService;
-
-    uses cpw.mods.modlauncher.serviceapi.ILaunchPluginService;
-    provides cpw.mods.modlauncher.serviceapi.ILaunchPluginService
-        with org.spongepowered.asm.launch.MixinLaunchPlugin;
     
     uses javax.annotation.processing.Processor;
     provides javax.annotation.processing.Processor

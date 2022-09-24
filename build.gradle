@@ -15,7 +15,6 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 apply plugin: 'java'
 apply plugin: 'com.github.hierynomus.license'
 apply plugin: 'checkstyle'
-apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'com.github.johnrengelman.shadow'
@@ -136,11 +135,6 @@ sourceSets {
         compileClasspath += modlauncher.output
         ext.languageVersion = 8
         ext.compatibility = '1.8'
-    }
-    modlauncher9 {
-        ext.languageVersion = 16
-        compileClasspath += main.output
-        compileClasspath += modlauncher.output
     }
     modularity {
         ext.languageVersion = 16
@@ -264,7 +258,7 @@ eclipse {
     }
     
     // Build service task outputs for test projects
-    autoBuildTasks compileModlauncher4Java, compileModlauncher9Java, compileLaunchwrapperJava
+    autoBuildTasks compileModlauncher4Java, compileLaunchwrapperJava
 }
 
 // Filter, process, and include resources
@@ -463,57 +457,6 @@ ext.mavenPom = {
             name = 'MIT license'
             url = 'http://opensource.org/licenses/MIT'
             distribution = 'repo'
-        }
-    }
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            pom mavenPom
-            groupId = project.group
-            version = project.version
-            artifactId = project.archivesBaseName
-
-            if (project.doSignJar) {
-                artifact signJar.outputs.files[0]
-            } else {
-                artifact stagingJar
-            }
-            artifact sourceJar
-            artifact javadocJar
-            artifact shadowJar
-        }
-    }
-    
-    repositories {
-        if (buildType == 'RELEASE') {
-            if (project.hasProperty("releaseRepo")) {
-                maven {
-                    credentials {
-                        username = project.releaseRepoUsername
-                        password = project.releaseRepoPassword
-                    }
-                    url project.releaseRepo
-                }
-            }
-            if (project.hasProperty("spongeReleaseRepo")) {
-                maven {
-                    credentials {
-                        username = project.spongeUsername
-                        password = project.spongePassword
-                    }
-                    url project.spongeReleaseRepo
-                }
-            }
-        } else if (project.hasProperty("spongeSnapshotRepo")) {
-            maven {
-                credentials {
-                    username = project.spongeUsername
-                    password = project.spongePassword
-                }
-                url project.spongeSnapshotRepo
-            }
         }
     }
 }
