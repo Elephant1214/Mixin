@@ -76,7 +76,7 @@ public class MixinProcessor {
      * Phase during which an error occurred, delegates to functionality in
      * available handler
      */
-    static enum ErrorPhase {
+    enum ErrorPhase {
         /**
          * Error during initialisation of a MixinConfig
          */
@@ -121,7 +121,7 @@ public class MixinProcessor {
          */
         private final String text;
         
-        private ErrorPhase() {
+        ErrorPhase() {
             this.text = this.name().toLowerCase(Locale.ROOT);
         }
         
@@ -559,7 +559,7 @@ public class MixinProcessor {
                 }
             }
             
-            plugin.acceptTargets(config.getTargetsSet(), Collections.<String>unmodifiableSet(otherTargets));
+            plugin.acceptTargets(config.getTargetsSet(), Collections.unmodifiableSet(otherTargets));
         }
 
         for (MixinConfig config : this.pendingConfigs) {
@@ -658,9 +658,14 @@ public class MixinProcessor {
 
     private void dumpClassOnFailure(String className, ClassNode classNode, MixinEnvironment env) {
         if (env.getOption(Option.DUMP_TARGET_ON_FAILURE)) {
-            ExtensionClassExporter exporter = this.extensions.<ExtensionClassExporter>getExtension(ExtensionClassExporter.class);
+            ExtensionClassExporter exporter = this.extensions.getExtension(ExtensionClassExporter.class);
             exporter.dumpClass(className.replace('.', '/') + ".target", classNode);
         }
     }
 
+    //My mess is below here
+
+    public int prepareConfigs(MixinEnvironment environment) {
+        return prepareConfigs(environment, this.extensions);
+    }
 }
